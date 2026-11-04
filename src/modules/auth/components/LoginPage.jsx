@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import Boton from '../../core/design-system/Boton';
-import MensajeError from '../../core/design-system/MensajeError';
+import MensajeError from '../../core/components/MensajeError';
 
 function LoginPage() {
     const [correo, setCorreo] = useState('');

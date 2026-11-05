@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/hooks/useAuth';
 import MensajeError from '../../core/components/MensajeError';
 import { obtenerTrabajador } from '../service/trabajadoresService';
+import NuevaSolicitudForm from '../../solicitudes/components/NuevaSolicitudForm';
 
 function TrabajadorDetallePage() {
     const { id } = useParams();
@@ -47,7 +48,7 @@ function TrabajadorDetallePage() {
             <p>Oficio: {trabajador.oficioPrincipal ?? 'Oficio sin definir'}</p>
             <p>Zona: {trabajador.zona ?? 'Zona sin definir'}</p>
 
-            {usuario?.rol === 'CONTRATANTE' && <p>Aquí irá el formulario del bloque 5</p>}
+            {usuario?.rol === 'CONTRATANTE' && <NuevaSolicitudForm trabajadorId={trabajador.id} />}
         </section>
     );
 }

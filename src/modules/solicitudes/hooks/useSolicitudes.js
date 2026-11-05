@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { listarSolicitudes } from '../services/solicitudesService';
+import { listarSolicitudes, cambiarEstado } from '../services/solicitudesService';
 
 export function useSolicitudes() {
   const { token, logout } = useAuth();
@@ -9,7 +9,7 @@ export function useSolicitudes() {
   const [error, setError] = useState(null);
 
   // Se deja en una función aparte para poder recargar la lista
-  // después de una acción (bloque 6: ejecutarAccion).
+  
   const cargarSolicitudes = useCallback(() => {
     return listarSolicitudes(token)
       .then((datos) => {
@@ -30,5 +30,20 @@ export function useSolicitudes() {
     cargarSolicitudes();
   }, [cargarSolicitudes]);
 
-  return { solicitudes, cargando, error };
+
+  async function ejecutarAccion(id, accion) {
+    setError(null);
+    try {
+      await cambiarEstado(id, accion, token);
+      await cargarSolicitudes();      // recarga la lista con el nuevo estado
+    } catch (e) {
+      if (e.status === 401) {
+        logout();
+      } else {
+        setError(e.message);         
+      }
+    }
+  }
+
+  return { solicitudes, cargando, error, ejecutarAccion };
 }

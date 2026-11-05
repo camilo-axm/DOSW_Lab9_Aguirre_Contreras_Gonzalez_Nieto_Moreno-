@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/hooks/useAuth';
 import MensajeError from '../../core/components/MensajeError';
-import { obtenerTrabajador } from '../service/trabajadoresService';
+import { obtenerTrabajador } from "../services/trabajadoresService";
 import NuevaSolicitudForm from '../../solicitudes/components/NuevaSolicitudForm';
 
 function TrabajadorDetallePage() {

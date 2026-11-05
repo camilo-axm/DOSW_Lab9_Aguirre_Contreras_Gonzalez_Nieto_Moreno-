@@ -83,3 +83,99 @@ Porque el front corre en el navegador del usuario, que puede modificarlo, y cual
 
 **¿Qué ventajas tiene tener el front y el back en repositorios separados?**
 Cada aplicación tiene su propio historial, sus propias ramas y su propio ciclo de entrega y despliegue, así que se pueden cambiar sin afectar a la otra. Los equipos trabajan sin pisarse, cada repo puede tener sus permisos y su integración continua, y ambas se comunican solo por la API REST, lo que permite incluso cambiar la tecnología de una sin tocar la otra.
+
+## Evidencias del recorrido completo
+
+Capturas del recorrido de la sección 8 del laboratorio, ejecutado con el back en `http://localhost:8080` y el front en `http://localhost:5173`. Usuarios: Carla (`CONTRATANTE`) y Pedro (`TRABAJADOR`).
+
+### Preparación
+
+**Back iniciado.** El back de OficioYa (Spring Boot) corre con `mvn spring-boot:run` y Tomcat escucha en el puerto 8080.
+
+![Back iniciado](docs/evidencias/00-back-iniciado.png )
+
+**Front iniciado.** El front arranca con `npm run dev` y Vite lo sirve en `http://localhost:5173`.
+
+![Front iniciado](docs/evidencias/00-front-iniciado.png)
+
+### 1. Entrar a `/solicitudes` sin sesión
+
+Se escribe la ruta protegida `/solicitudes` sin haber iniciado sesión.
+
+![Ruta protegida sin sesión](docs/evidencias/01a-sin-sesion-url-solicitudes.png)
+
+La app redirige automáticamente a `/login`: `RutaProtegida` no encuentra token.
+
+![Redirección al login](docs/evidencias/01b-sin-sesion-redirige-login.png)
+
+### 2. Login de Carla con contraseña errónea
+
+Con el correo de Carla y una contraseña incorrecta, el front muestra en rojo el mensaje que envía el backend ("Credenciales inválidas") y no deja entrar.
+
+![Login con contraseña errónea](docs/evidencias/02-login-contrasena-erronea.png)
+
+### 3. Login correcto de Carla
+
+Formulario con las credenciales correctas de Carla.
+
+![Formulario de login de Carla](docs/evidencias/03a-login-carla-formulario.png)
+
+Tras el login, la app lleva a `/trabajadores`. La barra superior muestra "Carla Ruiz (CONTRATANTE)" y la lista incluye a Pedro Gomez y Maria Lopez.
+
+![Lista de trabajadores](docs/evidencias/03b-login-carla-lista-trabajadores.png)
+
+### 4. Enviar una solicitud a Pedro
+
+En el perfil de Pedro (`/trabajadores/1`), Carla ve el formulario "Nueva solicitud" porque es `CONTRATANTE`.
+
+![Perfil de Pedro con formulario](docs/evidencias/04a-perfil-pedro-formulario-solicitud.png)
+
+Al enviarla, la app lleva a "Mis solicitudes", donde aparece la Solicitud #1 en estado `PENDIENTE` con el botón Cancelar.
+
+![Solicitud pendiente](docs/evidencias/04b-solicitud-pendiente.png)
+
+### 5. Entrar como Pedro
+
+Se cierra la sesión de Carla y se inicia sesión con Pedro.
+
+![Login de Pedro](docs/evidencias/05a-login-pedro.png)
+
+La barra superior muestra "Pedro Gomez (TRABAJADOR)".
+
+![Lista de trabajadores vista por Pedro](docs/evidencias/05b-pedro-lista-trabajadores.png)
+
+En "Mis solicitudes", Pedro ve la solicitud `PENDIENTE` con los botones Aceptar y Rechazar.
+
+![Pedro ve los botones Aceptar y Rechazar](docs/evidencias/05c-pedro-solicitud-botones.png)
+
+En el perfil de un trabajador, Pedro no ve el formulario de nueva solicitud: la interfaz cambia según el rol.
+
+![Perfil sin formulario para el trabajador](docs/evidencias/05d-pedro-perfil-sin-formulario.png)
+
+### 6. Pedro acepta la solicitud
+
+Al pulsar Aceptar, el estado cambia a `ACEPTADA` y los botones desaparecen.
+
+![Solicitud aceptada](docs/evidencias/06-pedro-acepta-solicitud.png)
+
+### 7. Carla cancela la solicitud
+
+Carla ve la solicitud `ACEPTADA` con el botón Cancelar.
+
+![Carla ve la solicitud aceptada](docs/evidencias/07a-carla-solicitud-aceptada.png)
+
+Al cancelar, el estado cambia a `CANCELADA` y el botón desaparece.
+
+![Solicitud cancelada](docs/evidencias/07b-carla-solicitud-cancelada.png)
+
+### 8. Recargar la página (F5)
+
+Al recargar, la app vuelve a `/login`: el token vive solo en memoria y se pierde.
+
+![Recarga vuelve al login](docs/evidencias/08-recarga-vuelve-login.png)
+
+### 9. Encabezado `Authorization`
+
+En las herramientas del navegador (Red → Fetch/XHR), la petición `solicitudes` lleva el encabezado `Authorization: Bearer ...` con el token JWT.
+
+![Encabezado Authorization](docs/evidencias/09-encabezado-authorization.png)

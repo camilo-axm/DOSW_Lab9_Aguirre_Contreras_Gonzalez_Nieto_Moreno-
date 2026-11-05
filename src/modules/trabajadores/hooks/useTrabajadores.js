@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { listarTrabajadores } from '../service/trabajadoresService';
+import { listarTrabajadores } from "../services/trabajadoresService";
 
 export function useTrabajadores() {
   const { token, logout } = useAuth();

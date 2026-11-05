@@ -4,6 +4,7 @@ import LoginPage from './modules/auth/components/LoginPage';
 import RutaProtegida from './modules/core/components/RutaProtegida';
 import TrabajadoresPage from './modules/trabajadores/components/TrabajadoresPage';
 import TrabajadorDetallePage from './modules/trabajadores/components/TrabajadorDetallePage';
+import SolicitudesPage from './modules/solicitudes/components/SolicitudesPage';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <Route element={<RutaProtegida />}>
             <Route path="/trabajadores" element={<TrabajadoresPage />} />
             <Route path="/trabajadores/:id" element={<TrabajadorDetallePage />} />
-            <Route path="/solicitudes" element={<p>Bloque 4: mis solicitudes</p>} />
+            <Route path="/solicitudes" element={<SolicitudesPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/trabajadores" replace />} />
         </Routes>

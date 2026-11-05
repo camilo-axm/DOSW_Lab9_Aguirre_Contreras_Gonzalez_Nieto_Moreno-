@@ -34,3 +34,35 @@ El front no tiene registro. Los usuarios se crean directamente en el back (`POST
 | --- | --- | --- |
 | `CONTRATANTE` | carla@example.com | ContrasenaDemo123! |
 | `TRABAJADOR` | pedro@example.com | ContrasenaDemo123! |
+
+## Estructura del proyecto (arquitectura de nivel 3)
+
+El código está organizado por módulos: cada uno agrupa todo lo de una funcionalidad. El flujo dentro de cada módulo es **componente → hook → service → API**, y ningún componente llama a `fetch` directamente.
+
+```text
+src/modules/
+├── core/
+│   ├── components/        # Navbar, RutaProtegida, MensajeError
+│   ├── design-system/     # Boton (+ su CSS Module)
+│   └── lib/               # httpClient
+├── auth/
+│   ├── components/        # LoginPage
+│   ├── hooks/             # useAuth
+│   ├── services/          # authService
+│   └── states/            # AuthContext y AuthProvider
+├── trabajadores/
+│   ├── components/        # TrabajadoresPage, TrabajadorCard, TrabajadorDetallePage
+│   ├── hooks/             # useTrabajadores
+│   └── services/          # trabajadoresService
+└── solicitudes/
+    ├── components/        # SolicitudesPage, SolicitudItem, NuevaSolicitudForm
+    ├── hooks/             # useSolicitudes
+    └── services/          # solicitudesService
+```
+
+| Módulo | Qué contiene |
+| --- | --- |
+| `core` | Lo que comparten los demás módulos: barra de navegación, ruta protegida, mensaje de error, botón reutilizable y `httpClient`, la única puerta hacia la API. |
+| `auth` | Inicio de sesión y manejo de la sesión (token y usuario) con `useContext`. |
+| `trabajadores` | Lista de trabajadores y perfil de cada uno. |
+| `solicitudes` | Lista de solicitudes, creación de una nueva y acciones (aceptar, rechazar, cancelar) según el rol. |

@@ -66,3 +66,20 @@ src/modules/
 | `auth` | Inicio de sesión y manejo de la sesión (token y usuario) con `useContext`. |
 | `trabajadores` | Lista de trabajadores y perfil de cada uno. |
 | `solicitudes` | Lista de solicitudes, creación de una nueva y acciones (aceptar, rechazar, cancelar) según el rol. |
+
+## Preguntas conceptuales
+
+**¿Qué diferencia hay entre una prop y un estado (`useState`)?**
+Una prop es un dato que un componente recibe de su padre y que solo puede leer. Un estado es memoria propia del componente: se cambia con su función `set...` y al cambiar React vuelve a pintar el componente.
+
+**¿Por qué la carga de datos va dentro de `useEffect` y no directamente en el cuerpo del componente?**
+El cuerpo del componente se ejecuta en cada render. Si la petición estuviera ahí, se repetiría en cada render, y como al llegar la respuesta se guarda en un estado (lo que provoca otro render), se generaría un bucle infinito de peticiones. `useEffect` corre después de pintar y solo cuando cambian sus dependencias (`[token, logout]`).
+
+**¿Para qué usaron `useContext` y qué pasaría si no lo usaran?**
+Para compartir la sesión (`token`, `usuario`, `login`, `logout`) con cualquier componente mediante `AuthContext`, sin pasarla por props. Sin él habría que pasar el token de `App` a cada componente intermedio hasta llegar a los hooks que lo necesitan, o cada pantalla tendría su propia copia de la sesión y no estarían sincronizadas.
+
+**¿Por qué ocultar el botón "Aceptar" a un contratante no es suficiente para proteger la API?**
+Porque el front corre en el navegador del usuario, que puede modificarlo, y cualquiera puede llamar al endpoint directamente con Postman o `curl` usando un token válido. La seguridad real la aplica el backend, que valida el rol y la propiedad de la solicitud en cada petición y responde `403` o `404`.
+
+**¿Qué ventajas tiene tener el front y el back en repositorios separados?**
+Cada aplicación tiene su propio historial, sus propias ramas y su propio ciclo de entrega y despliegue, así que se pueden cambiar sin afectar a la otra. Los equipos trabajan sin pisarse, cada repo puede tener sus permisos y su integración continua, y ambas se comunican solo por la API REST, lo que permite incluso cambiar la tecnología de una sin tocar la otra.
